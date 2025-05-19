@@ -13,7 +13,13 @@ def get_connection():
 if __name__ == "__main__":
     try:
         con = get_connection()
-        create_player('player1', con)
+        name= 'player1'
+        if get_player_by_name(name,con) == None : create_player(name, con)
+        data = [('player1',), ('player2',), ('player3',)]
+        load(data, con)
         get_players(con)
     except Exception as e:
         print(e)
+
+
+""" les structures de données | la partie fichier"""
