@@ -9,6 +9,31 @@ def create_player(player,con):
             con.rollback()
         print(e)
 
+def insert_info(table,champs,values,con):
+    query = "insert into " +table +" "+champs+" values "+values
+    #insert_info("t_bonus","(year,number,total)","('2023','1',100)",con)
+    try :
+        cursor = con.cursor()
+        cursor.execute(query)
+        con.commit()
+    except Exception as e:
+        if con:
+            con.rollback()
+        print(e)
+
+def create_table (table,champs,con):
+    query = "create table if not exists "+ table +" "+ champs
+    # champs = "(year varchar(10),number varchar(10), total int "
+    # table = "t_bonus"
+    try :
+        cursor = con.cursor()
+        cursor.execute(query)
+        con.commit()
+    except Exception as e:
+        if con:
+            con.rollback()
+        print(e)
+
 def get_players(con):
     query = "SELECT * FROM t_player"
     try :
