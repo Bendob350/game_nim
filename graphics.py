@@ -12,16 +12,16 @@ def draw_piles(piles, selected_pile=None):
     pile_h = H // len(piles)
     stick_w = 20
     clickable = []
-
+    color = (200, 50, 50)
     for i, count in enumerate(piles):
         y0 = i * pile_h
         total_width = count * stick_w
         x_start = (W - total_width) // 2
-        for j in range(count):
+        for j in range(count): # for j in count:
             x = x_start + j * stick_w
             y = y0 + (pile_h - (pile_h // 2)) // 2
-            rect = pygame.Rect(x, y + 7, stick_w - 4, pile_h // 2)
-            color = (200, 50, 50)
+            rect = pygame.Rect(x , y , stick_w - 4, pile_h // 2)
+            
             pygame.draw.rect(screen, color, rect)
             clickable.append((rect, (i, j + 1)))
 
@@ -30,12 +30,13 @@ def draw_piles(piles, selected_pile=None):
 
 def draw_difficulty_selection():
     btn_w, btn_h = 200, 60
-    spacing = 20
-    total_h = 3 * btn_h + 2 * spacing
+    spacing = 40
+    labels = ['easy', 'medium', 'hard']
+    total_h = len(labels) * btn_h + (len(labels)-1) * spacing
     start_y = (H - total_h) // 2
 
     buttons = []
-    labels = ['easy', 'medium', 'hard']
+    
     for i, label in enumerate(labels):
         rect = pygame.Rect(
             (W - btn_w)//2,
@@ -43,16 +44,17 @@ def draw_difficulty_selection():
             btn_w, btn_h
         )
         buttons.append((rect, label))
+    screen.fill((30, 30, 30))
+    for rect, label in buttons:
+        pygame.draw.rect(screen, (70,70,200), rect, border_radius=8)
+        txt = font.render(label.capitalize(), True, (255,255,255))
+        txt_r = txt.get_rect(center=rect.center)
+        screen.blit(txt, txt_r)
 
+    pygame.display.flip()
+    
     while True:
-        screen.fill((30, 30, 30))
-        for rect, label in buttons:
-            pygame.draw.rect(screen, (70,70,200), rect, border_radius=8)
-            txt = font.render(label.capitalize(), True, (255,255,255))
-            txt_r = txt.get_rect(center=rect.center)
-            screen.blit(txt, txt_r)
-
-        pygame.display.flip()
+        
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
@@ -65,13 +67,14 @@ def draw_difficulty_selection():
                     
 def draw_menu_selection():
     btn_w, btn_h = 500, 100
+    labels = ['New Game', 'Resume Last Game']
     spacing = 40
-    total_h = 3 * btn_h + 2 * spacing
-    start_y = (H - total_h) // 2 + spacing
+    total_h = len(labels) * btn_h + (len(labels)-1) * spacing
+    start_y = (H//2) - (total_h//2)  #(H - total_h) // 2
     start_x = (W - btn_w) // 2
 
     buttons = []
-    labels = ['New Game', 'Resume Last Game']
+    
     for i, label in enumerate(labels):
         rect = pygame.Rect(
             start_x,
@@ -94,7 +97,7 @@ def draw_menu_selection():
             if ev.type == pygame.QUIT:
                 pygame.quit()
                 exit()
-            elif ev.type == pygame.MOUSEBUTTONDOWN and ev.button == 1:
+            elif ev.type == pygame.MOUSEBUTTONDOWN:
                 for rect, label in buttons:
                     if rect.collidepoint(ev.pos):
                         return label  # exit menu
@@ -102,12 +105,12 @@ def draw_menu_selection():
 def draw_new_game_selection(tried_loading_game=False):
     btn_w, btn_h = 500, 100
     spacing = 40
-    total_h = 2 * btn_h + spacing
+    labels = ['H VS AI', 'H VS H']
+    total_h = len(labels) * btn_h + (len(labels)-1) * spacing
     start_y = (H - total_h) // 2 + spacing
     start_x = (W - btn_w) // 2
 
     buttons = []
-    labels = ['H VS AI', 'H VS H']
     for i, label in enumerate(labels):
         rect = pygame.Rect(
             start_x,
@@ -115,21 +118,21 @@ def draw_new_game_selection(tried_loading_game=False):
             btn_w, btn_h
         )
         buttons.append((rect, label))
+    screen.fill((30, 30, 30))
+    for rect, label in buttons:
+        pygame.draw.rect(screen, (70,70,200), rect, border_radius=8)
+        txt = font.render(label, True, (255,255,255))
+        txt_r = txt.get_rect(center=rect.center)
+        screen.blit(txt, txt_r)
 
-    while True:
-        screen.fill((30, 30, 30))
-        for rect, label in buttons:
-            pygame.draw.rect(screen, (70,70,200), rect, border_radius=8)
-            txt = font.render(label, True, (255,255,255))
-            txt_r = txt.get_rect(center=rect.center)
-            screen.blit(txt, txt_r)
-
-        if tried_loading_game:
-            txt = font.render("No saved game found!", True, (255, 0, 0))
-            txt_r = txt.get_rect(center=(W // 2, 0.2 * H))
-            screen.blit(txt, txt_r)
+    if tried_loading_game:
+        txt = font.render("No saved game found!", True, (255, 0, 0))
+        txt_r = txt.get_rect(center=(W // 2, 0.15 * H))
+        screen.blit(txt, txt_r)
 
         pygame.display.flip()
+    while True:
+        
 
         for ev in pygame.event.get():
             if ev.type == pygame.QUIT:
